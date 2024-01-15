@@ -6,6 +6,7 @@ import java.awt.image.*;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Terrain {
@@ -178,9 +179,16 @@ public class Terrain {
 	
 	// read in terrain from file
 	void readData(String fileName){ 
+      
+      //initialize Scanner variable
+      Scanner sc = null;
+      
+      //initialize String variable for data values to be assigned to before conversion to float
+      String token = null;
+
 		try{ 
-			Scanner sc = new Scanner(new File(fileName));
-			
+			sc = new Scanner(new File(fileName));
+
 			// read grid dimensions
 			// x and y correpond to columns and rows, respectively.
 			// Using image coordinate system where top left is (0, 0).
@@ -189,14 +197,13 @@ public class Terrain {
 			
 			// populate height grid
 			height = new float[dimx][dimy];
-			
+
 			for(int y = 0; y < dimy; y++){
 				for(int x = 0; x < dimx; x++) {
-					height[x][y] = sc.nextFloat();
-				}
-         }
-				
-			sc.close(); 
+               token = sc.next();
+               height[x][y] = Float.parseFloat(token);
+            }
+			}
          
          water = new Water(dimx, dimy);
          
@@ -214,16 +221,26 @@ public class Terrain {
          // generate waterImage
          deriveWaterImage();
          
-		}
-		catch (IOException e){ 
-			System.out.println("Unable to open input file "+fileName);
-			e.printStackTrace();
-         System.exit(0);
-		}
-		catch (java.util.InputMismatchException e){ 
-			System.out.println("Malformed input file "+fileName);
-			e.printStackTrace();
-         System.exit(0);
-		}
-	}
-}
+		   }
+		   catch (IOException e){ 
+			   System.out.println("Unable to open input file "+fileName);
+			   e.printStackTrace();
+            System.exit(1);
+		   }
+		   catch (java.util.InputMismatchException e){ 
+			   System.out.println("Malformed input file "+fileName);
+			   e.printStackTrace();
+            System.exit(1);
+		   }
+         catch (NumberFormatException e) {
+            System.out.println("Invalid float format: " + token);
+            e.printStackTrace();
+            System.exit(1);
+         }
+         finally {
+            if (sc != null) {
+               sc.close();
+            }
+         }
+	   }
+   }
