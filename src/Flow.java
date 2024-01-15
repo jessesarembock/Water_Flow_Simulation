@@ -124,7 +124,7 @@ public class Flow {
       } 
       else if (args.length > 1) {
          System.out.println("Incorrect number of command line arguments. Either enter 0 command line arguments to use default file or enter 1 command line argument to specify file name.");
-         System.exit(0);
+         System.exit(1);
       }
 				
 		// landscape information from file supplied as argument
